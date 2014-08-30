@@ -44,12 +44,28 @@ angular.module("angular-dygraphs", [
                 var chartArea;
                 var popoverPos = false;
 
-                var graph = new Dygraph(chartDiv, scope.data, scope.options);
+                var graph;
+
                 scope.$watch("data", function () {
+                    graph = new Dygraph(chartDiv, scope.data, scope.options);
                     var options = scope.options;
                     if (options === undefined) {
                         options = {};
                     }
+
+                    if (options.axes === undefined) {
+                        options.axes = {};
+                    }
+
+                    if (options.axes.y !== undefined && options.axes.y.format !== undefined &&
+                        options.axes.y.axisLabelFormatter === undefined) {
+                        options.axes.y.axisLabelFormatter = formatY1;
+                    }
+                    if (options.axes.y2 !== undefined && options.axes.y2.format !== undefined &&
+                        options.axes.y2.axisLabelFormatter === undefined) {
+                        options.axes.y2.axisLabelFormatter = formatY2;
+                    }
+
                     options.file = scope.data;
                     options.highlightCallback = scope.highlightCallback;
                     options.unhighlightCallback = scope.unhighlightCallback;
@@ -115,8 +131,8 @@ angular.module("angular-dygraphs", [
                             label = point.name;
                             color = "";
                         }
-                        if(scope.legendSeries[point.name].format) {
-                            value = point.yval.toFixed(scope.legendSeries[point.name].format);
+                        if (scope.legendSeries[point.name].format) {
+                            value = format(point.yval);//point.yval.toFixed(scope.legendSeries[point.name].format);
                         }
                         else {
                             value = point.yval;
@@ -146,27 +162,12 @@ angular.module("angular-dygraphs", [
                     }
                     popover.width(popoverWidth);
                     popover.height(popoverHeight);
-                    popover.animate({left: x + 'px', top: (event.pageY - (popoverHeight / 2)) + 'px'}, 20);
+                    popover.animate({left: x + 'px', top: (event.pageY - (popoverHeight / 2)) + 'px'}, 15);
 
                     console.log("Moving", {left: x + 'px', top: (event.pageY - (popoverHeight / 2)) + 'px'})
                 };
 
                 scope.unhighlightCallback = function (event, a, b) {
-                    // Check if the cursor is still within the chart area
-                    // If so, ignore this event.
-                    // This stops flickering if we get an even when the mouse covers the popover
-                    if(event.pageX > chartArea.left && event.pageX < chartArea.right && event.pageY > chartArea.top && event.pageY < chartArea.bottom) {
-                        var x;
-                        if (popoverPos == true) {
-                            x = event.pageX - popoverWidth - 20;
-                        }
-                        else {
-                            x = event.pageX + 20;
-                        }
-                        popover.animate({left: x + 'px'}, 10);
-                        return;
-                    }
-                    console.log(event, a, b);
                     popover.hide();
                 };
 
@@ -195,6 +196,18 @@ angular.module("angular-dygraphs", [
                     resize();
                 });
 
+                function formatY1(value) {
+                    return format(value, 1); //(options.axes.format)
+                }
+
+                function formatY2(value) {
+                    return format(value, 1);
+                }
+
+                function format(value, dec) {
+                    return value.toFixed(dec);
+                }
+
                 function resize() {
                     var maxWidth = 0;
                     element.find('div.series').each(function () {
@@ -209,11 +222,13 @@ angular.module("angular-dygraphs", [
                     console.log("Heights", legendHeight, parent.height(), parent.outerHeight(true),
                         $(mainDiv).outerHeight(), element.height(), $(legendDiv).height(),
                         $(legendDiv).outerHeight(true));
-                    graph.resize(parent.width(), parent.height() - legendHeight);
+                    if(graph !== undefined) {
+                        graph.resize(parent.width(), parent.height() - legendHeight);
+                    }
                     chartArea = $(chartDiv).offset();
                     chartArea.bottom = chartArea.top + parent.height() - legendHeight;
                     chartArea.right = chartArea.left + parent.width();
-                    console.log("Position",chartArea);
+                    console.log("Position", chartArea);
                 }
             }
         };
