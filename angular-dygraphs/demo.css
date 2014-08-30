@@ -21,6 +21,7 @@
     cursor: pointer;
 }
 .ng-dygraphs .dypopover {
+    pointer-events: none;
     position: fixed;
     display: none;
     background: #808080;
