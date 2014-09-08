@@ -6,9 +6,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-sanitize.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="angular-dialgauge.js"></script>
+    <script src="../src/angular-dialgauge.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
 
     <style>
         .dg {
@@ -17,16 +18,36 @@
         }
 
         .dialgauge-value {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 200;
         }
 
         .dialgauge-unit {
-            font-size: 14px;
+            font-size: 12px;
             stroke: green;
             fill: pink;
             font-weight: 100;
         }
+
+        .dialgauge-title {
+            font-size: 12px;
+            stroke: green;
+            fill: pink;
+            font-weight: 100;
+        }
+
+        .dg1 {
+            display: inline-block;
+            width: 140px;
+        }
+
+        .dg1 .dialgauge-value {
+            font-size: 30px;
+            font-weight: 400;
+            stroke: grey;
+            fill: grey;
+        }
+
     </style>
 
 
@@ -37,6 +58,12 @@
         <div class="col-md-4">
             <h3>dialgauge - AngularJS Directive</h3>
 
+            <p>This directive adds functionality to the dygraphs library by adding an interactive legend below the
+                graph,
+                and a popover tooltip that follows the mouse.</p>
+
+            <p>A LESS style sheet is provided that allows use with Bootstrap themes.</p>
+
             <p>This is inspired by the easy-pie-chart plugin for jQuery but is written to use SVG to make styling easier
                 and more flexible.</p>
         </div>
@@ -46,7 +73,7 @@
                     <ng-dial-gauge id="gauge1"
                                    scale-min="25"
                                    scale-max="75"
-                                   border-width="0"
+                                   border-width="1"
                                    ng-model="gauge1"
                                    bar-color="pink"
                                    bar-width="6"
@@ -109,6 +136,24 @@
                                    style="stroke:blue;font-weight:100;width:150px;">
                     </ng-dial-gauge>
                 </div>
+
+                <div class="dg1">
+                    <ng-dial-gauge id="gauge5"
+                                   scale-min="0"
+                                   scale-max="100"
+                                   border-width="0"
+                                   ng-model="gauge5"
+                                   bar-color="green"
+                                   bar-width="30"
+                                   angle="315"
+                                   rotate="180"
+                                   scale-minor-length="0"
+                                   scale-major-length="0"
+                                   line-cap="butt"
+                                   style="stroke:blue;font-weight:100;width:150px;">
+                    </ng-dial-gauge>
+                </div>
+
             </div>
 
             <div class="row">
@@ -130,6 +175,7 @@
             $scope.gauge2 = Math.floor(Math.random() * 100);
             $scope.gauge3 = Math.floor(Math.random() * 50);
             $scope.gauge4 = Math.floor(Math.random() * 100);
+            $scope.gauge5 = Math.floor(Math.random() * 100);
         }
 
 
