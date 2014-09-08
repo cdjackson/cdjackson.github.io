@@ -406,9 +406,13 @@ angular.module('angular-dialgauge', [
                         'fill="transparent"' +
                         '/>';
 
+                    path += '<text text-anchor="middle" x="' + center + '" y="' + center + '">';
                     if (newValue !== undefined) {
-                        path += '<text text-anchor="middle" x="' + center + '" y="' + center + '">' +
-                            '<tspan class="dialgauge-value">' + Math.floor(newValue) + '</tspan>';
+                        var dy = "";
+                        if(cfg.title == "") {
+                            dy = "0.3em"
+                        }
+                        path += '<tspan class="dialgauge-value" dy="'+ dy + '">' + Math.floor(newValue) + '</tspan>';
                     }
 
                     if (cfg.units != undefined) {
